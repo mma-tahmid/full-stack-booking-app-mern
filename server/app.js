@@ -2,8 +2,10 @@
 require("dotenv").config();
 
 // 1. Basic LIB import
-const router = require("./src/routes/api");
-const hotelRouter = require("./src/routes/hotelApi")
+//const router = require("./src/routes/api");
+const userApi = require("./src/routes/usersApi")
+const hotelApi = require("./src/routes/hotelsApi")
+const roomsApi = require("./src/routes/roomsApi")
 
 const express = require("express");
 
@@ -21,7 +23,8 @@ const mongoSanitize = require("express-mongo-sanitize")
 const cors = require("cors")
 
 // 3. DataBase Lib Import
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
+const cookieParser = require("cookie-parser");
 
 
 
@@ -33,6 +36,8 @@ app.use(cors());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 
 app.use(mongoSanitize())
+
+app.use(cookieParser());
 
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb" }))
@@ -73,9 +78,15 @@ mongoose.connect(process.env.DATABASE_URI, OPTION)
 
 // 9. Backend Routing Implement
 
-app.use("/api/v1", router) // base url api (api/v1)
+//app.use("/api/v1", router) // base url api (api/v1)
 
-app.use("/api/v1/auth", hotelRouter)
+
+
+const baseUrl = process.env.BASE_URL
+
+app.use(`${baseUrl}/user-auth`, userApi); // .env ar kono kiso path ar modddhe set korte hore aivabe set korte hobe
+app.use(`${baseUrl}/hotel`, hotelApi)
+app.use(`${baseUrl}/rooms`, roomsApi)
 
 
 

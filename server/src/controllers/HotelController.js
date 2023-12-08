@@ -1,5 +1,6 @@
 
 
+const hotelModel = require("../models/HotelModel");
 const hotelsModel = require("../models/HotelModel")
 
 
@@ -112,4 +113,56 @@ exports.ShowAllHotel = async (req, res) => {
 
 }
 
+
+// Count By City
+
+exports.CountByCity = async (req, res) => {
+
+    // transform an array from string using Split
+    const citys = req.query.cities.split(",")  // use cities as query (?) parameter 
+
+    try {
+        const list = await Promise.all(citys.map(singleCity => {
+            return hotelsModel.countDocuments({ city: singleCity })
+            //return hotelsModel.find({city:singleCity}).length // if use find then show all property
+        }))
+
+        //res.status(200).json({ status: "Success", data: list })
+        res.status(200).json(list)
+    }
+
+    catch (error) {
+        res.status(200).json({ status: "Fail", data: error })
+    }
+
+
+}
+
+
+// Count By Type
+exports.CountByType = async (req, res) => {
+
+    try {
+        const hotelCount = await hotelModel.countDocuments({ type: "Hotel" });
+        const apartmentCount = await hotelModel.countDocuments({ type: "apartment" });
+        const resortCount = await hotelModel.countDocuments({ type: "resort" });
+        const villaCount = await hotelModel.countDocuments({ type: "villa" });
+        const cabinCount = await hotelModel.countDocuments({ type: "cabin" });
+
+        res.status(200).json([
+
+            { type: "Hotel", count: hotelCount },
+            { type: "apartments", count: apartmentCount },
+            { type: "resorts", count: resortCount },
+            { type: "villas", count: villaCount },
+            { type: "cabins", count: cabinCount },
+        ])
+    }
+
+    catch (error) {
+        res.status(200).json({ status: "Fail", data: error })
+    }
+
+
+}
 

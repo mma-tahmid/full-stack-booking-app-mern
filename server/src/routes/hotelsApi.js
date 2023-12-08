@@ -24,5 +24,9 @@ router.get("/show-hotel-by-id/:id", hotelControllers.ShowHotelById);
 
 router.get("/show-all-hotel", hotelControllers.ShowAllHotel);
 
+// Count By City from Show All Hotel
+router.get("/count-by-city", hotelControllers.CountByCity);
+router.get("/count-by-type", hotelControllers.CountByType);
+
 
 module.exports = router; 
